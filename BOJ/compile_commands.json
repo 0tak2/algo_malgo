@@ -1,0 +1,5 @@
+[{
+  "file": "/home/limo/git/algo_malgo/BOJ/BOJ1406/main.cpp",
+  "directory": "/home/limo/git/algo_malgo/BOJ/BOJ1406",
+  "command": "clang++ -c /home/limo/git/algo_malgo/BOJ/BOJ1406/main.cpp -o /home/limo/git/algo_malgo/BOJ/BOJ1406/main.cpp.o  -I. -I.  -gdwarf-2  -O0  -Wall"
+ }]

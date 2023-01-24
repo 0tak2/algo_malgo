@@ -30,3 +30,9 @@
 *.exe
 *.out
 *.app
+
+# codelite workspace
+*.workspace
+*.project
+.codelite/
+build-Debug/
