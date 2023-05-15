@@ -16,7 +16,10 @@ class Solution42626 {
         }
         
         while (heap.peek() < K) {
-        	 if (heap.size() <= 1) break;
+        	 if (heap.size() <= 1) {
+        		 answer = -1;
+        		 break;
+        	 }
         	 
         	 int a = heap.poll();
         	 int b = heap.poll();
