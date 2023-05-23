@@ -1,33 +1,42 @@
+/**https://school.programmers.co.kr/learn/courses/30/lessons/43162
+ * 네트워크
+ * 
+ * DFS, 노드의 연결 개수 세기
+ * DFS... 너무 어렵다...
+ */
 package programmers.level3;
 
 class Solution43162 {
-	int[][] shouldVisit;
+	int[][] computers;
+	boolean[] isUsed;
 	int answer = 0;
 	
 	void dfs(int host) {
-		int visitCnt = 0;
-		for (int i=0; i<shouldVisit.length; i++) {
-			if (shouldVisit[host][i] == 1) {
-				shouldVisit[host][i] = 0;
+       isUsed[host] = true;
+		for (int i=0; i<computers[host].length; i++) {
+			if (!isUsed[i] && computers[host][i] == 1) {
 				dfs(i);
-				visitCnt++;
 			}
-		}
-		
-		if (visitCnt == 0) {
-			answer++;
 		}
 	}
 	
     public int solution(int n, int[][] computers) {
-        this.shouldVisit = computers;
+        this.computers = computers;
+        this.isUsed = new boolean[computers.length];
         
-        dfs(0);
+        for(int i=0; i<n; i++) {
+        	if(!isUsed[i]) {
+        		dfs(i);
+        		answer++;
+        	}
+        }
         
         return answer;
     }
 }
 
 public class Network43162 {
-
+	public static void main(String[] args) {
+		
+	}
 }
