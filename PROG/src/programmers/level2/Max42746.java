@@ -1,3 +1,11 @@
+/**
+ * https://school.programmers.co.kr/learn/courses/30/lessons/42746
+ * 가장 큰 수
+ * 
+ * 정렬, Comparator 사용
+ * int[] -> Integer[]
+ */
+
 package programmers.level2;
 
 import java.util.Arrays;
@@ -9,34 +17,23 @@ class Solution42746 {
 		Integer numbers[] = Arrays.stream(numbersInput).boxed().toArray(Integer[]::new); 
 		
 		Arrays.sort(numbers, (o1, o2) -> {
-//			char o1Head = String.valueOf(o1).charAt(0);
-//			char o2Head = String.valueOf(o2).charAt(0);
-//			
-//			return o2Head - o1Head;
+			String s1 = String.valueOf(o1) + String.valueOf(o2); 
+			String s2 = String.valueOf(o2) + String.valueOf(o1);
 			
-			String o1Str = String.valueOf(o1);
-			String o2Str = String.valueOf(o2);
-			int idx = 0;
-			int cmp = 0;
-			while (idx < o1Str.length()-1 && idx < o2Str.length()-1) {
-				char c1 = o1Str.charAt(idx);
-				char c2 = o2Str.charAt(idx);
-				
-				int tmp = c1 - c2;
-				if (tmp != 0) {
-					cmp = tmp;
-					break; // 에라이모루겟다
-				}
-			}
-				
-			
-			return 0;
+			return -1 * s1.compareTo(s2);
 		});
 		
 		for (int num : numbers) {
 			answer += String.valueOf(num);
 		}
-
+		
+		String[] letters = answer.split(""); // [0, 0, 0, 0] -> "0" Not "0000"
+		int zeroCnt = 0;
+		for (String s : letters) {
+			if ("0".equals(s)) zeroCnt++;
+		}
+		if (zeroCnt == letters.length) return "0";
+		
 		return answer;
 	}
 }
