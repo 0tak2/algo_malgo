@@ -45,24 +45,31 @@ class Solution178871Slow {
 
 class Solution178871 {
 	public String[] solution(String[] players, String[] callings) {
-    	List<String> ranking = new LinkedList<>();
+    	List<String> rankingSeq = new LinkedList<>();
+    	Map<String, Integer> rankingTable = new HashMap<>();
     	
-        Arrays.asList(players)
-        	.stream()
-        	.forEach(p -> ranking.add(p));
+        for (int i=0; i<players.length; i++) {
+        	String p = players[i];
+        	
+        	rankingSeq.add(p);
+        	rankingTable.put(p, i);
+        }
         
         Arrays.asList(callings)
         	.stream()
         	.forEach(c -> {
-        		int beforeRank = ranking.indexOf(c);
-        		String playerA = ranking.get(beforeRank-1);
-        		String playerB = ranking.get(beforeRank);
+        		int beforeRank = rankingTable.get(c);
+        		String playerA = rankingSeq.get(beforeRank-1);
+        		String playerB = rankingSeq.get(beforeRank);
         		
-        		ranking.set(beforeRank-1, playerB);
-        		ranking.set(beforeRank, playerA);
+        		rankingSeq.set(beforeRank-1, playerB);
+        		rankingSeq.set(beforeRank, playerA);
+        		
+        		rankingTable.put(playerA, beforeRank);
+        		rankingTable.put(playerB, beforeRank-1);
         	});
         
-        return ranking.toArray(new String[0]);
+        return rankingSeq.toArray(new String[0]);
 	}
 }
 
