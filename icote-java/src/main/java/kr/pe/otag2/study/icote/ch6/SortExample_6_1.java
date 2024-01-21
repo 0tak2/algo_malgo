@@ -33,6 +33,9 @@ public class SortExample_6_1 {
         return target;
     }
 
+    /**
+     * 삽입 정렬
+     */
     public int[] insertionSort(int[] target) {
         if (target.length < 2) {
             return target;
@@ -55,6 +58,9 @@ public class SortExample_6_1 {
         return target;
     }
 
+    /**
+     * 퀵 소트
+     */
     public void quickSort(int[] array, int startIdx, int endIdx) {
         // 재귀 함수로 사용할 것이므로 종료 조건을 명시
         if (startIdx >= endIdx) {
@@ -97,6 +103,9 @@ public class SortExample_6_1 {
         quickSort(array, right+1, endIdx); // 오른쪽 범위에서 퀵소트
     }
 
+    /**
+     * 계수 정렬
+     */
     public int[] countingSort(int[] target) {
         StringBuilder sb = new StringBuilder();
 
