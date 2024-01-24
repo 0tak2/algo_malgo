@@ -30,6 +30,10 @@ public class TwoArrays_6_4 {
         Arrays.sort(array2, Collections.reverseOrder());
 
         for (int i=0; i<k; i++) {
+            if (array1[i] >= array2[i]) { // 바꿀 수가 더 작으면 탈출
+                break;
+            }
+
             int tmp = array1[i];
             array1[i] = array2[i];
             array2[i] = tmp;
