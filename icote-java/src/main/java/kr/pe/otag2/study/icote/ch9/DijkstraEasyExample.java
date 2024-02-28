@@ -15,7 +15,7 @@ import java.util.List;
  * 4. 해당 노드를 거쳐서 다른 노드로 가는 비용을 계산해 최단 거리 테이블 갱신
  * 5. 3-4 단계 반복
  */
-public class DijikstraEasyExample {
+public class DijkstraEasyExample {
     public int getNextNode(int[] distanceTable, boolean[] visited) {
         int minCost = Integer.MAX_VALUE;
         int nextNode = 0;
@@ -74,7 +74,7 @@ public class DijikstraEasyExample {
         // {출발 노드} {도착 노드} {비용}
         // 반복
 
-        DijikstraEasyExample solution = new DijikstraEasyExample();
+        DijkstraEasyExample solution = new DijkstraEasyExample();
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String[] config = br.readLine().split(" ");
