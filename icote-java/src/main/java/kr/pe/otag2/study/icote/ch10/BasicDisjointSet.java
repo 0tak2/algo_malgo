@@ -22,8 +22,8 @@ public class BasicDisjointSet<T> {
         int parent2 = findParent(elId2);
 
         int newParent = Integer.min(parent1, parent2);
-        parentTable[elId1] = newParent;
-        parentTable[elId2] = newParent;
+        parentTable[parent1] = newParent; // 원래 부모의 부모를 업데이트
+        parentTable[parent2] = newParent;
     }
 
     public int findParent(int targetElId) {

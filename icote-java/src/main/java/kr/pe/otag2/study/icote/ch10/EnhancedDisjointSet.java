@@ -21,9 +21,11 @@ public class EnhancedDisjointSet<T> {
         int parent1 = findParent(elId1);
         int parent2 = findParent(elId2);
 
-        int newParent = Integer.min(parent1, parent2);
-        parentTable[elId1] = newParent;
-        parentTable[elId2] = newParent;
+        if (parent1 < parent2) {
+            parentTable[parent2] = parent1; // 원래 부모의 부모를 업데이트
+        } else {
+            parentTable[parent1] = parent2;
+        }
     }
 
     /**
