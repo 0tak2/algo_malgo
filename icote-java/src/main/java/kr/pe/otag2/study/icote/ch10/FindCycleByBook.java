@@ -24,6 +24,9 @@ public class FindCycleByBook {
             int node1 = Integer.parseInt(inputs[0]) - 1;
             int node2 = Integer.parseInt(inputs[1]) - 1;
 
+            // 같은 집합에 속해있는 것은 상관 없는데, 이미 같은 부모를 가리키고 있는데,
+            // 다시 union되지 않도록
+            // => 크루스칼 알고리즘으로 연결
             if (set.findParent(node1) == set.findParent(node2)) {
                 err = true;
                 break;
@@ -33,7 +36,7 @@ public class FindCycleByBook {
         }
 
         if (err) {
-            System.out.println("사이클이 있습니다. 요청한 작업을 수행할 수 없었습니다.");
+            System.out.println("사이클이 발생하여 작업을 중단했습니다.");
             return;
         }
         System.out.println("요청한 작업을 모두 수행했습니다.");
