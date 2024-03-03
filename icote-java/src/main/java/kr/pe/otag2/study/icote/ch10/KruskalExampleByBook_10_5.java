@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
 
-public class KruskalExampleByBook {
+public class KruskalExampleByBook_10_5 {
 
     // 노드의 개수(V)와 간선(Union 연산)의 개수(E)
     // 노드의 개수는 최대 100,000개라고 가정

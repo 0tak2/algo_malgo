@@ -25,7 +25,7 @@ import java.util.List;
  * 간선 개수가 E이면, O(ElogE)
  * 정렬에 필요한 O(ELogE)가 가장 크므로, 이외에 순회에 소요되는 시간은 빅O 표기법에서 무시된다.
  */
-public class KruskalExample {
+public class KruskalExample_10_5 {
     public static void main(String[] args) throws IOException {
         // 입력
         // {총 노드 수} {총 간선 후보 수}

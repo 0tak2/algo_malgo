@@ -22,7 +22,7 @@ import java.util.Queue;
  * 따라서, 정점 수를 V, 간선 수를 E라고 하면,
  * O(V + E)
  */
-public class TopologySortExample {
+public class TopologySortExample_10_6 {
     private static List<Integer> topoloygySort(List<List<Integer>> graph, int[] indegree) {
         List<Integer> result = new ArrayList<>(graph.size());
 

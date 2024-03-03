@@ -2,7 +2,7 @@ package kr.pe.otag2.study.icote.ch10;
 
 import java.util.Arrays;
 
-public class DisjointSetPractice2 {
+public class DisjointSetPractice2_10_3 {
     public static void main(String[] args) {
         EnhancedDisjointSet<Integer> set = new EnhancedDisjointSet<>(new Integer[]{2, 3, 5, 9, 8});
         set.union(0, 3);
