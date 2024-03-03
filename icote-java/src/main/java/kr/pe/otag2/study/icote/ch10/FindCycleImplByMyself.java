@@ -20,7 +20,7 @@ public class FindCycleImplByMyself {
 
         for (int i=0; i<totalUnions; i++) {
             inputs = br.readLine().split(" ");
-            int node1 = Integer.parseInt(inputs[0]) - 1;
+            int node1 = Integer.parseInt(inputs[0]) - 1;  // fixme: Set 내에서 실제 아이디와 개념적인 순번이 다름
             int node2 = Integer.parseInt(inputs[1]) - 1;
             set.union(node1, node2);
         }
