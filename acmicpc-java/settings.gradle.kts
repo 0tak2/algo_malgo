@@ -1,0 +1,2 @@
+rootProject.name = "acmicpc-java"
+
