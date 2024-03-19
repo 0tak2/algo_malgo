@@ -2,7 +2,6 @@ package kr.pe.otag2.study.greedy;
 
 import java.util.Arrays;
 
-// fixme: 정확성 검사 통과하도록
 public class MuckbangLive42891_First {
     public int solution(int[] food_times, long k) {
         int nextTurn = 0;
