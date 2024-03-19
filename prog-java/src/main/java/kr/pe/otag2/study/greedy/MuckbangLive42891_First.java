@@ -1,50 +1,47 @@
 package kr.pe.otag2.study.greedy;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
 
 // fixme: 정확성 검사 통과하도록
 public class MuckbangLive42891_First {
     public int solution(int[] food_times, long k) {
         int nextTurn = 0;
-        int count = 0;
-        List<Integer> skipList = new ArrayList<>(200_000);
+        int timeCount = 0;
+        boolean completed = false;
 
-        while(skipList.size() < food_times.length && count < k) {
-            if (skipList.contains(nextTurn)) {
+        while (timeCount < k) {
+            if (food_times[nextTurn] == 0) {
+                nextTurn = (nextTurn + 1) % food_times.length;
                 continue;
             }
 
-            int nextVal = food_times[nextTurn]--;
-            if (nextVal == 0) {
-                skipList.add(nextTurn);
-            }
-
+            food_times[nextTurn]--;
             nextTurn = (nextTurn + 1) % food_times.length;
-            count++;
+            timeCount++;
+
+            // 모두 0이면 완료 플래그 지정
+            if (Arrays.stream(food_times).filter(i -> i == 0).count() == food_times.length) {
+                completed = true;
+                break;
+            }
         }
 
-        //
-        if (skipList.size() == food_times.length) {
+        if (completed) {
             return -1;
         }
 
-        while(true) {
-            if (skipList.contains(nextTurn)) {
-                continue;
-            }
-
+        // 유효한 키인지 검사
+        while (food_times[nextTurn] == 0) {
             nextTurn = (nextTurn + 1) % food_times.length;
-            break;
         }
-
 
         return nextTurn + 1;
     }
 
     public static void main(String[] args) {
         MuckbangLive42891_First solution = new MuckbangLive42891_First();
-        int result = solution.solution(new int[] {3, 1, 2}, 5);
+//        int result = solution.solution(new int[] {3, 1, 2}, 6);
+        int result = solution.solution(new int[] {3, 1, 1, 1, 2, 4, 3}, 12);
         System.out.println(result);
     }
 }
