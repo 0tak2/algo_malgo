@@ -97,11 +97,11 @@ public class LinkedList<T> {
 
         Node<T> beforeTarget = null;
         Node<T> cursor = _startNode;
-        for (int i=1; i < size(); i++) {
-            cursor = cursor.getNextNode(); // 1번부터 시작
+        for (int i=1; i < size(); i++) { // 1번부터 시작
             if (cursor.getNextNode() == target) {
                 beforeTarget = cursor;
             }
+            cursor = cursor.getNextNode();
         }
 
         if (beforeTarget == null) {

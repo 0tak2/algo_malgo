@@ -40,9 +40,12 @@ class LinkedListTest {
         linkedList.add("B");
         linkedList.add("C");
 
-        linkedList.delete(1); // fixme
+        linkedList.delete(1);
 
         assertEquals(linkedList.get(0), "A");
         assertEquals(linkedList.get(1), "C");
+
+        linkedList.delete(0);
+        assertEquals(linkedList.get(0), "C");
     }
 }
