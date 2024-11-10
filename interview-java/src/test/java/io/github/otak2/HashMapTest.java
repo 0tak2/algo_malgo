@@ -24,7 +24,7 @@ public class HashMapTest {
         Map<String, Integer> map = new HashMap<>();
         Integer[] arr = new Integer[26];
 
-        // 해시맵 입출력
+        // 해시맵 입출력 - 29ms
         Long step1Start = System.currentTimeMillis();
         for (int i=0; i<100000; i++) {
             for (int j=0; j<26; j++) {
@@ -33,7 +33,7 @@ public class HashMapTest {
         }
         Long step1End = System.currentTimeMillis();
 
-        // 단순 배열 입출력
+        // 단순 배열 입출력 - 10ms
         Long step2Start = System.currentTimeMillis();
         for (int i=0; i<100000; i++) {
             for (int j=0; j<26; j++) {
