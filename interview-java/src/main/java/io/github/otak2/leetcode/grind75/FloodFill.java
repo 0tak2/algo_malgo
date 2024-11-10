@@ -28,7 +28,6 @@ public class FloodFill {
             int y = p[0];
             int x = p[1];
 
-            visited[y][x] = true;
             image[y][x] = color;
 
             for (int i=0; i<4; i++) {
@@ -38,6 +37,7 @@ public class FloodFill {
                 if (ny >= 0 && ny < image.length && nx >= 0 && nx < image[0].length
                         && image[ny][nx] == originalColor
                         && !visited[ny][nx]) {
+                    visited[ny][nx] = true;
                     st.offerFirst(new int[] {ny, nx});
                 }
             }
