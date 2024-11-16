@@ -1,7 +1,7 @@
 package io.github.otak2.leetcode.learn.arrayandstring.ch4;
 
 /**
- * Two Sum II
+ * Rotate Array
  *
  * https://leetcode.com/explore/learn/card/array-and-string/204/conclusion/1182/
  *
