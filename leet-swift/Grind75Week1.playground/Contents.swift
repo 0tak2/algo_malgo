@@ -363,4 +363,99 @@ class Leet110 {
 
 // MARK: - 141. Linked List Cycle (Grind75 #12)
 // https://leetcode.com/problems/linked-list-cycle
+/**
+ # 문제 분석
+ 링크드 리스트가 주어지면, 해당 리스트가 순환하는지 여부를 판단하면 되는 문제이다.
+ 문제 말미에 단서로, 공간복잡도를 O(1)로 풀 수 있는 방법을 요구하고 있다.
+ 
+ # 처음 접근 (Leet141)
+ 탐색할 때 마다, 현재 노드의 next를 수정하는 방법을 생각하였다. 예컨대 모든 노드의 next를 head(첫번째 노드)로 설정하는 것이다.
+ next가 head일 경우는 인위적으로 조작한 것이 아니라면, 존재하지 않는다.
+ 
+ 1. 루트 노드부터 순회한다. 반복문의 조건은 노드가 nil이 아닌 경우 실행되도록 설정한다. (while node != nil)
+    1-1. next가 head인지 검사한다.
+    1-2. 맞다면 true를 반환한다.
+    1-3. 아니라면 next를 head로 설정한 뒤, 실제 next로 노드를 지정한 후 다음 루프로 넘어간다.
+ 
+ -> 그러나 이 방법은 원본 리스트를 수정한다는 문제가 있다. 단순 코딩테스트라면 문제가 없겠지만, 인터뷰 문제라면 공격이 있을 수 있겠다는 생각이 들었다.
+   실제로 이 코드를 사용하려면, 실행하기 전에 원본 배열을 복사해둬야할 것이다.
+ 
+ # Floyd’s Cycle Detection Algorithm (Leet141_floyd)
+ 찾아보니 순환 감지(Cycle Detection)은 CS에서 종종 다뤄지는 토픽으로 보이고, 플로이드의 알고리즘이 유명했다.
+ - 플로이드의 알고리즘은 포인터 두 개를 이용해 리스트를 순회하는데, 포인터별로 순회 속도가 다르다.
+ - 포인터 한 개는 요소를 두 개씩 순회하고, 다른 포인터는 요소를 한 개씩 순회한다.
+ - 만약
+    - 주어진 리스트가 순환 리스트라면, 빠른 포인터는 nil를 가리키게 된다.
+    - 순환 리스트가 아니라면, 언젠가 두 포인터는 같은 요소를 가리키게 된다.
+ 
+ */
 
+public class ListNode {
+    public var val: Int
+    public var next: ListNode?
+    public init(_ val: Int) {
+        self.val = val
+        self.next = nil
+    }
+}
+
+// 25ms, 16.58MB
+class Leet141 {
+   func hasCycle(_ head: ListNode?) -> Bool {
+       guard let head else { return false }
+
+       var node: ListNode? = head
+       while let cur = node {
+           if let next = cur.next {
+               if next === head {
+                   return true
+               }
+               
+               let nextNode: ListNode? = next
+               cur.next = head
+               node = nextNode
+           } else {
+               node = nil
+           }
+       }
+
+       return false
+   }
+}
+
+// 25ms, 16.33MB
+class Leet141_floyd {
+    func hasCycle(_ head: ListNode?) -> Bool {
+        guard let head else { return false }
+        
+        var fast: ListNode?
+        var slow: ListNode? = head
+        
+        // fast에는 두 스텝 앞의 노드를 할당해둔다
+        if head.next == nil {
+            return false
+        }
+        
+        if let next = head.next, let nextNext = next.next {
+            fast = nextNext
+        } else {
+            return false
+        }
+        
+        while let node1 = fast, let node2 = slow {
+            if node1 === node2 {
+                return true
+            }
+            
+            if let oneStepNext = node1.next, let twoStepNext = oneStepNext.next {
+                fast = twoStepNext
+            } else {
+                fast = node1.next
+            }
+            
+            slow = node2.next
+        }
+        
+        return false
+    }
+}
