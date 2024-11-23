@@ -24,8 +24,8 @@ import Swift
  -> 살짝 나아졌지만 여전히 비슷한 성능이 나온다. 54ms, Beats 11.04%
  
  # 개선 2 (Leet235Enhanced2)
- 단순히 탐색 방식의 문제가 아님을 확인했다. -> 이진 검색 트리가 주어진다는 것에 시선을 돌렸다.
- 이진 검색 트리에서 조상과 두 자식의 대소관계에 집중해보면, child1 < ancester < child2의 관계가 성립한다.
+ 위와 같이 단순히 탐색 방식의 문제가 아님을 확인했다. -> 이진 검색 트리가 주어진다는 것에 시선을 돌렸다.
+ 이진 검색 트리에서 조상과 두 자식의 대소관계에 집중해보면, child1 < parent < child2의 관계가 성립한다.
  즉, 무조건 완전 탐색할 필요가 없고, p와 q의 값에 따라서 탐색하면 된다.
  
  1. root에서 시작해 각 노드와 p, q간의 대소관계를 확인한다.
@@ -317,6 +317,7 @@ print(answer3!.val)
  시간이 되면 최적화해보면 좋을 것 같다.
  */
 
+// 0ms, 18.24MB
 class Leet110 {
     func countDepth(_ parent: TreeNode?, _ prevDepth: Int) -> Int {
         guard let node = parent else { return prevDepth }
