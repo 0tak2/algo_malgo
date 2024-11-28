@@ -20,6 +20,25 @@ public class ListNode {
         self.val = val
         self.next = nil
     }
+    public init(_ val: Int, _ next: ListNode) {
+        self.val = val
+        self.next = next
+    }
+}
+
+// for debug
+extension ListNode {
+    func printAll() -> Void {
+        var curr: ListNode? = self
+        while let el = curr {
+            print(el.val, terminator: "")
+            curr = el.next
+            if curr != nil {
+                print(" -> ", terminator: "")
+            }
+        }
+        print()
+    }
 }
 
 // 25ms, 16MB
@@ -354,5 +373,273 @@ func removeNthFromEnd(_ head: ListNode?, _ n: Int) -> ListNode? {
     return head
 }
 
-// MARK: - 3.Classic Problems
-// TODO: 여기서부터 진행
+// MARK: - 3. Classic Problems
+
+// MARK: Reverse Linked List
+/**
+ https://leetcode.com/explore/learn/card/linked-list/219/classic-problems/1205/
+ 
+ ### 분석
+ 주어진 링크드리스트를 뒤집어 새로운 head를 반환하면 된다.
+ 문제 말미에 반복문으로도, 재귀함수로도 구현할 수 있다고 되어있다.
+ 
+ ### 접근
+ - 차례대로 순회하면서 다음을 반복한다.
+   1. 현재 원소의 next를 이전 원소로 지정한다.
+   2. 현재 원소를 원래 다음 원소로, 이전 원소를 현재 원소로 업데이트한다.
+ 
+ ### 재귀함수로 고쳐보기
+ - 도져히 모르겠어서 샘플 답변을 참고했다.
+ - 노드를 인자로 받는 함수 reverseList에 시작 노드를 넘겨 호출하면,
+   1. 해당 노드, 그 다음 노드가 모두 nil이 아닌지 확인
+   2. 모두 nil이 아니라면 (아직 마지막 노드에 도달하지 않은 상태)
+     (1) reverseList에 현재 노드를 넘겨 재귀 호출. 반환값 newHead를 잘 보관 (newHead는 마지막 노드 - 3단계를 보면 이해가 됨)
+     (2) 다음 노드의 next를 현재 노드로, 현재 노드의 next를 nil로 설정하고, newHead를 반환
+   3. 둘 중 하나가 nil이라면 (재귀호출이 거듭된 상태로, 마지막 노드에 도달한 상태
+     - 그대로 현재 노드를 반환 (즉, 마지막 노드가 반환됨)
+     - 이 반환 값이 이전 스택 프레임의 newHead가 되고, 이 값은 스택 프레임이 팝될 때마다 반환되어 최초 스택 프레임의 반환 값이 됨.
+ */
+
+// 0ms, 17.8MB
+func reverseList(_ head: ListNode?) -> ListNode? {
+    var cur: ListNode? = head
+    var prv: ListNode? = nil
+    
+    while let el = cur {
+        let nextEl: ListNode? = cur?.next
+        el.next = prv
+        prv = cur
+        cur = nextEl
+    }
+    
+    return prv
+}
+
+func reverseListRecursive(_ head: ListNode?) -> ListNode? {
+    guard let head, let headNext = head.next else { return head }
+    let newHead = reverseListRecursive(headNext)
+
+    headNext.next = head
+    head.next = nil
+
+    return newHead
+}
+
+let result1 = reverseList(ListNode(
+    1,
+    ListNode(
+        2,
+        ListNode(
+            3,
+            ListNode(
+                4,
+                ListNode(5)
+            )
+        )
+    )
+))
+result1?.printAll()
+
+let result2 = reverseListRecursive(ListNode(
+    1,
+    ListNode(
+        2,
+        ListNode(
+            3,
+            ListNode(
+                4,
+                ListNode(5)
+            )
+        )
+    )
+))
+result2?.printAll()
+
+// MARK: Remove Linked List Elements
+/**
+ https://leetcode.com/explore/learn/card/linked-list/219/classic-problems/1207/
+ 
+ ### 분석
+ 리스트에서 val이 주어진 값과 같다면 모두 제거하고 head를 반환하면 된다.
+ 
+ ### 접근
+ 1. 역시 이전 노드를 기억하면서 1칸씩 탐색
+ 2. 현재 노드의 val이 주어진 값과 같으면, 이전 노드의 next를 현재 노드가 아닌 현재 노드의 next로 지정
+ 
+ - 첫 노드부터 삭제해야하는 경우, 이전 노드가 없으므로 head 자체를 현재 노드로 옮겨줘야 한다. 이 부분 처리에서 애를 조금 먹었다.
+ - 재귀함수로 고치려면?
+ */
+
+// 0ms, 18MB
+func removeElements(_ head: ListNode?, _ val: Int) -> ListNode? {
+    var cur: ListNode? = head
+    var prv: ListNode? = nil
+    var newHead: ListNode? = head
+    
+    while let el = cur {
+        if el.val == val {
+            prv?.next = el.next
+            cur = el.next
+            
+            if prv == nil { // 이전 노드가 없는 경우 head를 당겨준다
+                newHead = cur
+            }
+            
+            continue
+        }
+        
+        prv = el
+        cur = el.next
+    }
+    
+    return newHead
+}
+
+// MARK: - Odd Even Linked List
+/**
+ https://leetcode.com/explore/learn/card/linked-list/219/classic-problems/1208/
+ 
+ ### 분석
+ 리스트 각각 노드에 대하여, (index + 1)이 홀수인 노드를 앞으로, 짝수인 노드를 뒤로 재배치하도록 하는 문제이다.
+ 
+ ### 접근
+ 1. 홀수 인덱스 노드와 짝수 인덱스 노드 각각을 가리키는 커서를 따로 둔다.
+ 2. 리스트를 순회하면서, 현재 인덱스를 계산하고, 인덱스가 홀수면 홀수 노드 커서의 next에 현재 노드를 연결한다. 짝수면 짝수 노드 커서의 next에 연결한다.
+ 
+ - 아이디어 자체는 간단했고 코드에도 오류가 없었는데 처음 답안을 제출했을 때 시간초과가 발생했다.
+ - 마지막 노드의 next가 앞선 다른 노드를 가리키게 되면서 순환 리스트가 되어, leetcode에서 답안을 판정하면서 시간초과가 난 것이었다.
+ */
+
+// 0ms, 18.3MB
+func oddEvenList(_ head: ListNode?) -> ListNode? {
+    guard let head = head else { return nil }
+    
+    if head.next == nil { // 요소가 한 개인 리스트
+        return head
+    }
+    
+    var oddCur: ListNode? = head
+    var evenCur: ListNode? = head.next
+    let evenStart: ListNode = evenCur!
+    
+    if evenCur?.next == nil { // 요소가 딱 두 개인 리스트
+        return head
+    }
+    
+    var cur: ListNode? = evenCur!.next // 세 번째 노드를 할당해두고 시작
+    oddCur!.next = nil // 1, 2번 노드의 next는 끊어둠
+    evenCur!.next = nil
+    var count: Int = 2
+    while let node = cur {
+        count += 1
+        if count % 2 == 1 { // odd
+            oddCur!.next = node
+            oddCur = node
+            // print("odd node: \(node.val)")
+        } else { // even
+            evenCur!.next = node
+            evenCur = node
+            // print("even node: \(node.val)")
+        }
+        
+        cur = node.next
+        node.next = nil // 원래 next는 끊어준다.
+    }
+    
+    oddCur!.next = evenStart
+    
+    return head
+}
+
+let result3 = oddEvenList(ListNode(
+    1,
+    ListNode(
+        2,
+        ListNode(
+            3,
+            ListNode(
+                4,
+                ListNode(5)
+            )
+        )
+    )
+))
+result3?.printAll()
+
+let result4 = oddEvenList(ListNode(
+    1,
+    ListNode(
+        2,
+        ListNode(3)
+    )
+))
+result4?.printAll()
+
+// MARK: - Palindrome Linked List
+/**
+ https://leetcode.com/explore/learn/card/linked-list/219/classic-problems/1209/
+ 
+ ### 분석
+ 링크드리스트가 회문인지 확인하는 문제이다. 거꾸로 읽든 똑바로 읽든 동일한가?
+ 문제 말미에  시간복잡도 O(n), 공간복잡도 O(1)로 해결 가능한지 묻고 있다.
+ 
+ ### 처음 접근
+ - 단방향 리스트이기 때문에 단순히 투포인터를 쓸 수는 없다.
+ - 각 노드를 순회하면서 하나의 문자열에 concat 하고, 문자열을 뒤집었을 때 원래 값과 동일한지를 검색하는 방식으로 해결했다.
+ - 이렇게 되면 우선 속도가 너무 느리며, Swift에서 문자열은 메모리를 가변적으로 사용하므로 공간복잡도가 O(n)이 된다는 한계가 있다.
+ 
+ ### 다른 풀이들을 보고 다시 풀이
+ - 성능이 빠른 풀이들도 배열에 값들을 넣어두고, 이 배열에 대해 투포인터로 확인하는 방식들이 대부분이었다.
+ - 결국 공간복잡도는 O(n)이 된다. (전체 리스트 노드를 임시 배열에 모두 넣기 때문에 인풋 수만큼 임시 배열의 길이가 길어진다.)
+ - 어쨌든 이런 식으로도 풀어보았다.
+ */
+
+// 1. String
+// 123ms, 23.8MB
+func isPalindromeSlow(_ head: ListNode?) -> Bool {
+    var number: String = ""
+    
+    var cur: ListNode? = head
+    while let node = cur {
+        number += String(node.val)
+        cur = node.next
+    }
+    
+    return number == String(number.reversed())
+}
+
+// 2. Array
+// 21ms, 23.8MB
+func isPalindrome(_ head: ListNode?) -> Bool {
+    var numbers: [Int8] = [] // 조건에 `0 <= Node.val <= 9`가 있으므로 8비트 정수 범위에 들어간다.
+    
+    var cur: ListNode? = head
+    while let node = cur {
+        numbers.append(Int8(node.val))
+        cur = node.next
+    }
+    
+    var left: Int = 0
+    var right: Int = numbers.count - 1
+    while left < right {
+        if numbers[left] != numbers[right] {
+            return false
+        }
+        left += 1
+        right -= 1
+    }
+    
+    return true
+}
+
+let result5 = isPalindrome(ListNode(
+    1,
+    ListNode(
+        2,
+        ListNode(
+            2,
+            ListNode(1)
+        )
+    )
+))
+print(result5)
