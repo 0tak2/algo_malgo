@@ -213,3 +213,4 @@ fabric.properties
 .idea/**/azureSettings.xml
 
 .DS_Store
+*.xcuserstate
