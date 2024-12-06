@@ -461,3 +461,138 @@ class Leet141_floyd {
         return false
     }
 }
+
+// MARK: - 232. Implement Queue using Stacks (Grind75 #13)
+// https://leetcode.com/problems/implement-queue-using-stacks
+/**
+ ## 분석
+ 두 개의 스택을 이용해 FIFO 큐를 만들어야 한다.
+ 
+ ## 접근
+ 스택을 두 개 이용하면 순서를 반전시킬 수 있다. 예컨대 1, 2, 3을 순차적으로 큐에 넣고 빼는 작업을 두 스택 st1, st2를 이용해 수행한다면,
+ 
+ 우선 st1에 값을 넣는다.
+ 
+ ```
+ st1.offer(1); st1.offer(2); st1.offer(3);
+ // 구분           front                        tail
+ // st1           1               2               3
+ // st2                        [empty]
+ ```
+ 
+ 
+ st1로부터 모든 값을 pop하고 직후에 st2에 넣는다.
+ 
+ ```
+ st2.offer(st.pop()); st2.offer(st.pop()); st2.offer(st.pop());
+ // 구분          front                        tail
+ // st1                       [empty]
+ // st2          3               2               1
+ ```
+ 
+ st2에 대해 pop을 수행하면 FIFO로 값을 뺄 수 있다.
+ 
+ ## 고민
+ 다만 push와 pop이라는 연산이 일괄적으로 순차 수행되는게 아니라, 각각 분리되어 수행될 수 있다는 것을 고민해야 한다.
+ 이 경우에도 하나의 스택(st1)을 push 전용으로 사용하고, 다른 스택(st2)을 pop 전용으로 사용한다고 하면 순서가 보장되는 것을 확인할 수 있었다.
+ 단 st1에서 st2로 순서를 뒤집어 넣어주는 작업이 pop이나 peek 연산 전, st2가 빈 경우에만 선행되면 된다. (아래 구현 내용에서 MyQueue::transform의 호출 위치 참고)
+ */
+
+// 0ms, 17.70 MB
+
+// 우선 스택을 구현한다.
+class MyStack {
+    private var data: [Int] = []
+
+    init() {}
+
+    func offer(_ x: Int) {
+        data.append(x)
+    }
+
+    func pop() -> Int {
+        return data.removeLast()
+    }
+
+    func peek() -> Int {
+        return data[data.count - 1]
+    }
+
+    func empty() -> Bool {
+        return data.isEmpty
+    }
+}
+
+class MyQueue {
+    private var st1: MyStack = MyStack()
+    private var st2: MyStack = MyStack()
+    
+    init() {
+        
+    }
+    
+    func push(_ x: Int) {
+        st1.offer(x)
+    }
+    
+    func pop() -> Int {
+        if !st2.empty() {
+            return st2.pop()
+        }
+        
+        // st2가 비어있으면 st1에서 모두 pop하여 추가
+        transfer()
+        
+        return st2.pop()
+    }
+    
+    func peek() -> Int {
+        if !st2.empty() {
+            return st2.peek()
+        }
+        
+        // st2가 비어있으면 st1에서 모두 pop하여 추가
+        transfer()
+        
+        return st2.peek()
+    }
+    
+    func empty() -> Bool {
+        return st1.empty() && st2.empty()
+    }
+    
+    private func transfer() {
+        while !st1.empty() {
+            st2.offer(st1.pop())
+        }
+    }
+}
+
+print("==== 232 DEBUG ====")
+let q = MyQueue()
+q.push(1)
+q.push(2)
+q.push(3)
+print(q.empty())
+print(q.pop())
+q.push(4)
+print(q.pop())
+q.push(5)
+print(q.pop())
+q.push(6)
+print(q.empty())
+print(q.pop())
+print(q.pop())
+print(q.pop())
+print(q.empty())
+/*
+ false
+ 1
+ 2
+ 3
+ false
+ 4
+ 5
+ 6
+ true
+ */
