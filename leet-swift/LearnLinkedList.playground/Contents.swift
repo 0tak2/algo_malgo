@@ -643,3 +643,606 @@ let result5 = isPalindrome(ListNode(
     )
 ))
 print(result5)
+
+// MARK: - 4. Dobuly Linked List
+
+// MARK: Design Linked List
+/**
+ https://leetcode.com/explore/learn/card/linked-list/210/doubly-linked-list/1294/
+ 
+ 더블 링크드 리스트 구현해보기
+ */
+
+class MyLinkedList {
+    private var head: Node?
+    var count: Int {
+        guard let head = head else { return 0 }
+        
+        var count: Int = 1
+        var cur: Node? = head.next
+        while let node = cur {
+            cur = node.next
+            count += 1
+        }
+        
+        return count
+    }
+    
+    init() {
+        
+    }
+    
+    func get(_ index: Int) -> Int {
+        return getNode(index)?.val ?? -1
+    }
+    
+    func addAtHead(_ val: Int) {
+        guard let head = self.head else {
+            head = Node(val: val)
+            return
+        }
+        
+        let newNode = Node(val: val, prev: nil, next: head)
+        head.prev = newNode
+        self.head = newNode
+    }
+    
+    func addAtTail(_ val: Int) {
+        guard let tail = getNode(count - 1) else {
+            if count == 0 {
+                head = Node(val: val)
+            } else {
+                print("[addAtTail] something wrong...")
+            }
+            return
+        }
+        
+        let newNode = Node(val: val, prev: tail, next: nil)
+        tail.next = newNode
+    }
+    
+    func addAtIndex(_ index: Int, _ val: Int) {
+        guard let addAt = getNode(index) else {
+            if index == count {
+                addAtTail(val)
+            } else {
+                print("[addAtIndex] node not found")
+            }
+            return
+        }
+        
+        let addAtPrev: Node? = addAt.prev
+        
+        let newNode = Node(val: val, prev: addAtPrev, next: addAt)
+        addAt.prev = newNode
+        addAtPrev?.next = newNode
+        
+        if addAt === self.head {
+            self.head = newNode
+        }
+    }
+    
+    func deleteAtIndex(_ index: Int) {
+        guard let deleteAt = getNode(index) else {
+            print("[deleteAtIndex] node not found")
+            return
+        }
+        
+        deleteAt.prev?.next = deleteAt.next
+        deleteAt.next?.prev = deleteAt.prev
+        
+        if deleteAt === self.head {
+            self.head = deleteAt.next
+        }
+    }
+    
+    private func getNode(_ index: Int) -> Node? {
+        guard let head = self.head else { return nil }
+        
+        var count: Int = 0
+        var cur: Node? = head
+        while let node = cur {
+            if count == index {
+                return node
+            }
+            
+            cur = node.next
+            count += 1
+        }
+        
+        return nil
+    }
+    
+    func debug() {
+        print("======== DEBUG ========")
+        
+        var cur: Node? = self.head
+        var index = 0
+        while let node = cur {
+            print("node #\(index) : val=\(node.val) : prev=\(node.prev?.val ?? -99999) : next=\(node.next?.val ?? -99999)")
+            index += 1
+            cur = node.next
+        }
+    }
+    
+    class Node {
+        var val: Int
+        var prev: Node?
+        var next: Node?
+        
+        init(val: Int, prev: Node?, next: Node?) {
+            self.val = val
+            self.prev = prev
+            self.next = next
+        }
+        
+        init(val: Int) {
+            self.val = val
+        }
+    }
+}
+
+/* case 1
+ ["MyLinkedList","addAtHead","addAtHead","addAtHead","addAtIndex","deleteAtIndex","addAtHead","addAtTail","get","addAtHead","addAtIndex","addAtHead"]
+ [[],[7],[2],[1],[3,0],[2],[6],[4],[4],[4],[5,0],[6]]
+ */
+let list1 = MyLinkedList()
+list1.addAtHead(7)
+list1.addAtHead(2)
+list1.addAtHead(1)
+list1.addAtIndex(3, 0)
+list1.deleteAtIndex(2)
+list1.addAtHead(6)
+list1.addAtTail(4)
+print(list1.get(4))
+list1.addAtHead(4)
+list1.addAtIndex(5, 0)
+list1.addAtHead(6)
+list1.debug()
+
+/* case 2
+ ["MyLinkedList","addAtHead","addAtTail","addAtIndex","get","deleteAtIndex","get"]
+ [[],[1],[3],[1,2],[1],[0],[0]]
+ */
+let list2 = MyLinkedList()
+list2.addAtHead(1)
+list2.addAtTail(3)
+list2.addAtIndex(1, 2)
+print(list2.get(1))
+list2.deleteAtIndex(0)
+print(list2.get(0))
+list2.debug()
+
+/* case 3
+ ["MyLinkedList","addAtIndex","addAtIndex","addAtIndex","get"]
+ [[],[0,10],[0,20],[1,30],[0]]
+ */
+let list3 = MyLinkedList()
+list3.addAtIndex(0, 10)
+list3.addAtIndex(0, 20)
+list3.addAtIndex(1, 30)
+print(list3.get(0))
+list3.debug()
+
+
+// MARK: Merge Two Sorted Lists
+/**
+ https://leetcode.com/explore/learn/card/linked-list/213/conclusion/1227/
+ 
+ 이전에 Grind 75로 풀었던 문제지만 Swift로는 안풀어봐서 다시 풀이
+ */
+
+// 0ms, 17.9MB
+func mergeTwoListsDirty(_ list1: ListNode?, _ list2: ListNode?) -> ListNode? {
+    guard let head1 = list1, let head2 = list2 else {
+        if list1 == nil && list2 == nil {
+            return nil
+        }
+        
+        if list1 == nil {
+            return list2
+        }
+        
+        if list2 == nil {
+            return list1
+        }
+        
+        return nil
+    }
+    
+    let ret: ListNode
+    var cur1: ListNode? = head1
+    var cur2: ListNode? = head2
+    if head1.val < head2.val {
+        ret = ListNode(head1.val)
+        cur1 = head1.next
+    } else {
+        ret = ListNode(head2.val)
+        cur2 = head2.next
+    }
+    
+    var retCur: ListNode = ret
+    while cur1 != nil || cur2 != nil {
+        if cur1 == nil {
+            retCur.next = ListNode(cur2!.val)
+            retCur = retCur.next!
+            cur2 = cur2?.next
+            continue
+        }
+        
+        if cur2 == nil {
+            retCur.next = ListNode(cur1!.val)
+            retCur = retCur.next!
+            cur1 = cur1?.next
+            continue
+        }
+        
+        if cur1!.val < cur2!.val {
+            retCur.next = ListNode(cur1!.val)
+            retCur = retCur.next!
+            cur1 = cur1!.next
+        } else {
+            retCur.next = ListNode(cur2!.val)
+            retCur = retCur.next!
+            cur2 = cur2!.next
+        }
+    }
+    
+    return ret
+}
+
+// 클로드의 힘을 빌려 다듬은 코드
+// 0ms, 17.7MB
+func mergeTwoLists(_ list1: ListNode?, _ list2: ListNode?) -> ListNode? {
+    if list1 == nil && list2 == nil {
+        return nil
+    }
+    
+    if list1 == nil { return list2 }
+    if list2 == nil { return list1 }
+    
+    let dummy = ListNode(0)
+    var cur = dummy
+    var c1: ListNode? = list1
+    var c2: ListNode? = list2
+    
+    while c1 != nil && c2 != nil {
+        if c1!.val < c2!.val {
+            cur.next = c1
+            c1 = c1!.next
+        } else {
+            cur.next = c2
+            c2 = c2!.next
+        }
+        
+        cur = cur.next!
+    }
+    
+    cur.next = c1 ?? c2 // 남은 노드를 할당
+    
+    return dummy.next
+}
+
+let result = mergeTwoLists(ListNode(
+    1,
+    ListNode(
+        2,
+        ListNode(
+            4
+        )
+    )
+), ListNode(
+    1,
+    ListNode(
+        3,
+        ListNode(
+            4
+        )
+    )
+))
+print(dump(result) ?? "")
+
+
+// MARK: Add Two Numbers
+/**
+ https://leetcode.com/explore/learn/card/linked-list/213/conclusion/1228/
+ 
+ ### 분석
+ 두 수가 자릿수대로 끊겨 링크드 리스트로 주어진다. 순서는 뒤집혀져 있다.
+ 이 두 수를 더해 마찬가지로 뒤집힌 링크드 리스트로 반환하는 문제이다.
+ 
+ ### 접근
+ 원래 두 수를 수기로 더하면, 끝 자리부터 더하게 된다.
+ 따라서 뒤집어진 두 링크드 리스트를 head부터 자리를 옮기며 더하고,
+ 이전 자리 덧셈에서 올라온 수가 있다면 같이 더해주는 방법을 생각했다.
+ */
+
+// 0ms, 17.6MB
+func addTwoNumbers(_ l1: ListNode?, _ l2: ListNode?) -> ListNode? {
+    var dummy = ListNode(0)
+    var cd = dummy
+    
+    var c1: ListNode? = l1
+    var c2: ListNode? = l2
+    var carry = 0
+    while c1 != nil || c2 != nil {
+        let n1 = c1?.val ?? 0
+        let n2 = c2?.val ?? 0
+        
+        let sum = (n1 + n2 + carry) % 10
+        carry = (n1 + n2 + carry) / 10
+        
+        cd.next = ListNode(sum)
+        cd = cd.next!
+        c1 = c1?.next
+        c2 = c2?.next
+    }
+    
+    if carry > 0 {
+        cd.next = ListNode(carry) // 받아올림이 남은 경우 한 자리 더 만들어 할당해준다
+    }
+    
+    return dummy.next
+}
+
+
+// MARK: Flatten a Multilevel Doubly Linked List
+/**
+ https://leetcode.com/explore/learn/card/linked-list/213/conclusion/1225/
+ 
+ ### 분석
+ 이 문제에서의 링크드 리스트는, 더블 링크드 리스트 바탕에, 각 토드마다 차일드 노드를 하나 더 넣어 레벨을 표현할 수 있다.
+ 이 문제의 핵심은 위와 같은 리스트가 주어질 때, 차일드 노드를 다음 노드로 연결해 한 레벨로 선형적으로 연결하는 것이다.
+ 특정 노드 curr에 차일드 리스트가 있다면, 이 리스트의 노드들은 curr 이후, curr.next 이전에 삽입되어야 한다.
+ 
+ ### 접근
+ - 각 레벨 별로 하위 레벨 노드를 삽입하는 작업을 반복해야 하기 때문에 재귀적으로 접근하면 된다.
+ 
+ 1. 첫 노드부터 다음 노드로 순회하면서 상위 레벨 노드에 현재 노드를 추가한다. 이때 매 노드마다 child가 nil이 아닌지 검사한다.
+ 2. nil이 아니면 현재 노드를 상위 레벨 노드로 하고, child를 새로운 현재 노드로 해서 이 작업을 반복한다.
+ 
+ ### 구현
+ - 속도가 많이 느린 편
+ - 재귀함수 + 반복문 구조라 시간복잡도를 계산해볼 필요가 있다.
+ - TODO: 개선 가능한지 확인
+ */
+
+// 10ms, 17.1MB
+// 여러 번 제출해도 많이 느린 편
+func insertToParent(parent: inout Node, child: inout Node) {
+    let parentNext: Node? = parent.next
+    
+    parent.next = child
+    child.prev = parent
+    
+    var c: Node? = child
+    var childTail: Node? = nil
+    while var node = c {
+        if var childOfChild = node.child {
+            insertToParent(parent: &node, child: &childOfChild)
+        }
+        
+        childTail = node
+        c = c?.next
+    }
+    
+    childTail!.next = parentNext
+    parentNext?.prev = childTail!
+    parent.child = nil
+}
+
+func flatten(_ head: Node?) -> Node? {
+    guard let head = head else { return nil }
+    
+    var c: Node? = head
+    while var node = c {
+        if var child = node.child {
+            insertToParent(parent: &node, child: &child)
+        }
+        c = c?.next
+    }
+    
+    return head
+}
+
+// -----
+
+extension Node {
+    func printAll() {
+        print("====== ALL NODES ======")
+        
+        var c: Node? = self
+        var count: Int = 0
+        while let node = c {
+            print("#\(count) : val=\(node.val) : prev=\(node.prev?.val ?? -999999) : next=\(node.next?.val ?? -999999) : child=\(node.child?.val ?? -999999)")
+            c = c?.next
+            count += 1
+        }
+    }
+}
+
+class Node {
+    public var val: Int
+    public var prev: Node?
+    public var next: Node?
+    public var child: Node?
+    public init(_ val: Int) {
+        self.val = val
+        self.prev = nil
+        self.next = nil
+        self.child  = nil
+    }
+}
+
+// MARK: Copy List with Random Pointer
+/**
+ https://leetcode.com/explore/learn/card/linked-list/213/conclusion/1229/
+ 
+ # 분석
+ - 이 문제에서 사용되는 노드는 다음 노드를 가리키는 next와, 리스트 내의 랜덤 노드를 가리키는 random 프로퍼티를 가진다.
+ - 이러한 노드로 구성된 리스트를 완전히 새로운 리스트로 복사하라는 것이 요구사항이다.
+ - Deep-copy를 요구하여, 복사된 리스트 내의 노드는 원본 노드를 가리켜서는 안된다. 또한 원본 리스트도 변경되어서는 안된다.
+ 
+ - 문제 힌트에 추가 공간을 사용하지 않고 풀 수 있는 아이디어가 소개되었다.
+ - 아래 코드에 주석으로 도식을 넣은 것처럼, 원본 노드 다음에 복사 노드를 넣고 조작하는 방법이다.
+ 
+ # 접근 및 구현
+ - 문제에서 주어진 힌트를 참고해서 구현했다.
+ 
+ 1. 각 노드를 순회하면서 val만 동일하게 새로운 객체를 생성해 원본 노드의 next에 할당한다.
+ 2. 리스트의 홀수 노드(원본 노드)를 순회하면서 현재 노드의 복사본(그 다음 노드)의 random을 원래 random이 가리키는 노드의 복사본(그 다음 노드)으로 변경한다.
+ 3. 짝수 노드들만 모아서 별도의 리스트로 만들고 반환한다.
+ 
+ - 위 단계별로 루프를 하나씩을 순회하게 된다. 1개 또는 2개 루프로 합쳐보려고 했지만 포기... 루프가 3개여도 시간복잡도 O(n)이기는 할 것이다...
+ */
+
+// 14ms, 17.6MB
+// typealias Node2 = Node // 제출시 주석 해제
+func copyRandomList(_ head: Node2?) -> Node2? {
+    guard let head = head else { return nil }
+    
+    let dummy: Node2 = Node2(0)
+    var retCur: Node2? = dummy
+    
+    // 1. 각 노드를 복제해 next로 할당한다.
+    // [ A ] - [ B ] - [ C ]
+    // [ A ] - [ A' ] -  [ B ] - [ B' ] - [ C ] - [ C' ]
+    var cur: Node2? = head
+    while let node = cur {
+        let copied = Node2(node.val)
+        
+        copied.next = node.next
+        node.next = copied
+        
+        cur = node.next!.next // 원본 노드들만 방문
+    }
+    
+    // 2. 홀수 노드들(원본 노드)을 방문하면서 자신의 복사 노드(다음 노드)의 random을 random 노드의 복사 노드(그 다음 노드)로 재할당한다. -- 이 작업은 복사가 완료된 후 진행되어야 하므로 앞의 while과 합쳐질 수 없다.
+    cur = head
+    while let node = cur {
+        node.next?.random = node.random?.next // 이 노드의 다음 노드(=복사본)의 random은 원래 random의 다음 노드(=복사본)으로 할당한다.
+        cur = node.next?.next // 복구된 next(다음 원본 노드)로 커서 할당
+    }
+    
+    // 3. 짝수 노드들만 모아서 별도의 리스트로 만든다. -- 이 작업은 위 작업과 함께했을 때 포인터가 꼬이는 문제가 있었다.
+    cur = head
+    while let node = cur {
+        retCur?.next = node.next // 복사본을 반환할 리스트에 추가
+        node.next = node.next?.next // 원본 next 복구
+        retCur = retCur?.next
+        cur = node.next // 커서에 원본 next (위에서 다음 원본을 가리키도록 복구됨) 할당
+    }
+    
+    
+    return dummy.next
+}
+
+class Node2 {
+    public var val: Int
+    public var next: Node2?
+    public var random: Node2?
+    public init(_ val: Int) {
+        self.val = val
+        self.next = nil
+        self.random = nil
+    }
+}
+
+extension Node2 {
+    func printAll() {
+        print("====== DEBUG ======")
+        
+        var cur: Node2? = self
+        var count: Int = 0
+        while let node = cur {
+            print("#\(count) : val=\(node.val) next=\(node.next?.val ?? -99999) randome=\(node.random?.val ?? -99999) : \(ObjectIdentifier(node))")
+            cur = node.next
+            count += 1
+        }
+    }
+}
+
+let node0 = Node2(7)
+let node1 = Node2(13)
+let node2 = Node2(11)
+let node3 = Node2(10)
+let node4 = Node2(1)
+node0.next = node1
+node1.next = node2
+node2.next = node3
+node3.next = node4
+
+node0.random = nil
+node1.random = node0
+node2.random = node4
+node4.random = node0
+
+let copied = copyRandomList(node0) ?? Node2(0)
+node0.printAll()
+copied.printAll()
+
+// MARK: Rotate List
+/**
+ https://leetcode.com/explore/learn/card/linked-list/213/conclusion/1295/
+ 
+ ### 분석
+ - 리스트를 k번 회전하는 문제이다.
+ - 0부터 n까지 왼쪽부터 나열했을 때, 왼쪽으로 회전시킨다.
+ 
+ ## 접근
+ - 하나씩 옮기지 않고 한 번에 옮기려면, 다음을 알 수 있어야 한다.
+   1. 전체 리스트의 원소 수를 알아야 한다. k는 원소 수보다 커질 수 있는데, k를 전체 원소 수로 나눈 나머지에 따라 결과가 반복된다.
+   2. (원소 수 - k를 원소 수로 나눈 나머지) 번째 원소의 이전 원소를 확보해야 한다. 이 원소의 next에 nil을 할당하고, 마지막 원소의 next를 첫 원소로 할당하면 된다.
+ */
+
+// 0ms, 17.4MB
+
+/**
+ rotateRight(_:_)의 가독성을 높이고자 전체 노드 수 세기, 특정 인덱스 노드 가져오기 등은 여기서 구현했다.
+ */
+extension ListNode {
+//    var count: Int { // 위에서 이미 정의함
+//        var cnt: Int = 0
+//        var cursor: ListNode? = self
+//        while let node = cursor {
+//            cnt += 1
+//            cursor = node.next
+//        }
+//        return cnt
+//    }
+    
+    func get(indexOf: Int) -> ListNode? {
+        var i: Int = 0
+        var cursor: ListNode? = self
+        while let node = cursor {
+            if i == indexOf {
+                return node
+            }
+            
+            i += 1
+            cursor = node.next
+        }
+        
+        return nil
+    }
+}
+
+class Solution {
+    func rotateRight(_ head: ListNode?, _ k: Int) -> ListNode? {
+        guard let head = head else { return nil }
+        
+        let remain = k % head.count
+        let newTail = head.get(indexOf: head.count - remain - 1)!
+        let newStart = newTail.next
+        let originalTail = head.get(indexOf: head.count - 1)!
+        
+        if remain == 0 { // 그대로
+            return head
+        }
+        
+        newTail.next = nil // 여기는 새로운 끝 노드가 된다.
+        originalTail.next = head // 첫 노드와 이어준다.
+        
+        return newStart
+    }
+}
