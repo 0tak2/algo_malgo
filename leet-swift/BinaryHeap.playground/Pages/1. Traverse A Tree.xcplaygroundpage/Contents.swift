@@ -16,7 +16,7 @@ public class TreeNode {
 }
 
 // Binary Tree Preorder Traversal
-// https://leetcode.com/explore/learn/card/data-structure-tree/134/traverse-a-tree/928/
+// https://leetcode.com/explore/lean/card/data-structure-tree/134/traverse-a-tree/928/
 // 0ms, 19.8MB
 class BinaryTreePreorderTraversalSolution {
     func preorderTraversal(_ root: TreeNode?) -> [Int] {
@@ -41,5 +41,42 @@ class BinaryTreePreorderTraversalSolution {
         return result
     }
 }
+
+// Binary Tree Inorder Traversal
+// https://leetcode.com/explore/learn/card/data-structure-tree/134/traverse-a-tree/929/
+// 할 때마다 어렵다...
+// 0ms, 19.6MB
+class BinaryTreeInorderTraversalSolution {
+    func inorderTraversal(_ root: TreeNode?) -> [Int] {
+        var result = [Int]()
+        var stack = [TreeNode]()
+        var current = root
+
+        while current != nil || !stack.isEmpty {
+            // 왼쪽 노드 끝까지 탐색
+            while let node = current {
+                stack.append(node)
+                current = node.left
+            }
+            
+            // 왼쪽 끝에 도달했으면 pop 후 처리
+            let node = stack.removeLast()
+            result.append(node.val)
+            
+            // 오른쪽 서브트리로 이동
+            current = node.right
+        }
+
+        return result
+    }
+}
+
+let root1 = TreeNode(1,
+                     nil,
+                     TreeNode(2,
+                              TreeNode(3),
+                              nil))
+let test1 = BinaryTreeInorderTraversalSolution().inorderTraversal(root1) // [1, 3, 2]
+print(test1)
 
 //: [Next](@next)
