@@ -79,4 +79,32 @@ let root1 = TreeNode(1,
 let test1 = BinaryTreeInorderTraversalSolution().inorderTraversal(root1) // [1, 3, 2]
 print(test1)
 
+// Binary Tree Postorder Traversal
+// https://leetcode.com/explore/learn/card/data-structure-tree/134/traverse-a-tree/930/
+// L, R을 바꿔서 순회하고 전체 방문 리스트를 뒤집는다
+// 0ms, 19.7MB
+class BinaryTreePostorderTraversalSolution {
+    func postorderTraversal(_ root: TreeNode?) -> [Int] {
+        guard let root = root else { return [] }
+        
+        var result = [Int]()
+        var stack: [TreeNode] = [root]
+        
+        while !stack.isEmpty {
+            let node = stack.removeLast()
+            result.append(node.val)
+            
+            if let left = node.left {
+                stack.append(left)
+            }
+            
+            if let right = node.right {
+                stack.append(right)
+            }
+        }
+        
+        return result.reversed()
+    }
+}
+
 //: [Next](@next)
