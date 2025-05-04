@@ -107,4 +107,97 @@ class BinaryTreePostorderTraversalSolution {
     }
 }
 
+// Binary Tree Level Order Traversal
+// https://leetcode.com/explore/learn/card/data-structure-tree/134/traverse-a-tree/931/
+// 레벨 별로 노드들을 묶어내어 반환한다
+
+// 처음 시도
+// 아이디어: 스택을 이용해 좌상에서 우하로 순회해볼 수 있겠다
+func levelOrderFirstAnswer(_ root: TreeNode?) -> [[Int]] {
+    guard let root = root else { return [] }
+    
+    var result = [[Int]]()
+    var st = [TreeNode]()
+    st.append(root)
+    result.append([root.val])
+    
+    while !st.isEmpty {
+        let cur = st.removeFirst() // FIFO
+        var levelNodes = [Int]()
+        
+        if let left = cur.left {
+            levelNodes.append(left.val)
+            st.append(left)
+        }
+        
+        if let right = cur.right {
+            levelNodes.append(right.val)
+            st.append(right)
+        }
+        
+        if !levelNodes.isEmpty { // 자식이 없는 경우 추가하지 않는다
+            result.append(levelNodes)
+        }
+    }
+    
+    return result
+}
+
+/**
+ 반례
+ [1,2,3,4,null,null,5]
+ 
+ 출력 (오답)
+ [[1],[2,3],[4],[5]]
+ 
+ 기대 (정답)
+ [[1],[2,3],[4,5]]
+ 
+ 개선 방향: 현재 레벨을 어딘가에 기록해둬야할까? 아니면 레벨이 내려가는 걸 어떻게 알 수 있지?
+         1
+     2       3
+   4  5     6  7
+ */
+
+// 두번째 시도
+// 현재 레벨(뎁스)를 명시적으로 스택에 포함시켰다 -> leetcode의 예시 제출 코드도 비슷하게 현재 레벨을 명시적으로 저장하는 방식으로 해결했다.
+// 0ms, 19.9MB
+func levelOrder(_ root: TreeNode?) -> [[Int]] {
+    guard let root = root else { return [] }
+    
+    var result = [[Int]]()
+    var st = [(TreeNode, Int)]()
+    st.append((root, 1))
+    result.append([root.val])
+    
+    while !st.isEmpty {
+        let (cur, level) = st.removeFirst() // FIFO
+        var levelNodes = [Int]()
+        
+        if let left = cur.left {
+            levelNodes.append(left.val)
+            st.append((left, level + 1))
+        }
+        
+        if let right = cur.right {
+            levelNodes.append(right.val)
+            st.append((right, level + 1))
+        }
+        
+        // add sub result
+        if levelNodes.isEmpty { // 자식이 없는 경우 추가하지 않는다
+            continue
+        }
+        
+        if result.count > level {
+            result[level] += levelNodes
+        } else {
+            result.append(levelNodes)
+        }
+    }
+    
+    return result
+}
+
+
 //: [Next](@next)
