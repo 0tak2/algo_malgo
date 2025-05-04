@@ -15,7 +15,7 @@ public class TreeNode {
     }
 }
 
-// Binary Tree Preorder Traversal
+// MARK: - Binary Tree Preorder Traversal
 // https://leetcode.com/explore/lean/card/data-structure-tree/134/traverse-a-tree/928/
 // 0ms, 19.8MB
 class BinaryTreePreorderTraversalSolution {
@@ -42,7 +42,7 @@ class BinaryTreePreorderTraversalSolution {
     }
 }
 
-// Binary Tree Inorder Traversal
+// MARK: - Binary Tree Inorder Traversal
 // https://leetcode.com/explore/learn/card/data-structure-tree/134/traverse-a-tree/929/
 // 할 때마다 어렵다...
 // 0ms, 19.6MB
@@ -79,7 +79,7 @@ let root1 = TreeNode(1,
 let test1 = BinaryTreeInorderTraversalSolution().inorderTraversal(root1) // [1, 3, 2]
 print(test1)
 
-// Binary Tree Postorder Traversal
+// MARK: - Binary Tree Postorder Traversal
 // https://leetcode.com/explore/learn/card/data-structure-tree/134/traverse-a-tree/930/
 // L, R을 바꿔서 순회하고 전체 방문 리스트를 뒤집는다
 // 0ms, 19.7MB
@@ -107,7 +107,7 @@ class BinaryTreePostorderTraversalSolution {
     }
 }
 
-// Binary Tree Level Order Traversal
+// MARK: - Binary Tree Level Order Traversal
 // https://leetcode.com/explore/learn/card/data-structure-tree/134/traverse-a-tree/931/
 // 레벨 별로 노드들을 묶어내어 반환한다
 
@@ -198,6 +198,5 @@ func levelOrder(_ root: TreeNode?) -> [[Int]] {
     
     return result
 }
-
 
 //: [Next](@next)
