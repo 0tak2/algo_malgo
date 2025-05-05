@@ -75,4 +75,40 @@ class SymmetricTreeSolution {
         return checkSymmetric(root.left, root.right)
     }
 }
+
+// MARK: - Path Sum
+// https://leetcode.com/explore/learn/card/data-structure-tree/17/solve-problems-recursively/537/
+// 루트에서 리프까지 더했을 때 targetSum일 수 있는지 판별하는 문제
+// 잔실수로 헤매다가 마지막에 ChatGPT 힘을 빌렸다
+// 0ms, 19.7MB
+class PathSumSolution {
+    func sum(_ node: TreeNode?, _ targetSum: Int, _ accumSum: Int) -> Bool {
+        // 여기서 판별하면 leaft가 아니라 그저 끊긴 노드일 때도 비교하기 때문에 안된다.
+        // guard let node = node else {
+        //     return targetSum == accumSum
+        // }
+        // 아래처럼 그냥 false를 반환하는 것으로 변경
+        guard let node = node else {
+            return false
+        }
+        
+        // 미리 판별하는 조건문을 넣었었지만 문제 조건에서 노드의 값이 음수일 수도 있으므로 제외한다.
+        // if accumSum + node.val > targetSum {
+        //     return false
+        // }
+        
+        let currentAccumSum = accumSum + node.val
+        if node.left == nil && node.right == nil {
+            return targetSum == currentAccumSum
+        }
+        
+        return sum(node.left, targetSum, currentAccumSum) || sum(node.right, targetSum, currentAccumSum)
+    }
+    
+    func hasPathSum(_ root: TreeNode?, _ targetSum: Int) -> Bool {
+        guard let root = root else { return false }
+        return sum(root, targetSum, 0)
+    }
+}
+
 //: [Next](@next)
