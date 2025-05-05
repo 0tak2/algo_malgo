@@ -44,4 +44,35 @@ func maxDepth(_ root: TreeNode?) -> Int {
     return max(leftDepth, rightDepth) + 1
 }
 
+// MARK: - Symmetric Tree
+// 트리가 좌우 대칭인지 판별하는 문제이다
+// 좌우 대칭을 로직으로 어떻게 판별할지 고민하다가 웹을 참고했다
+// https://www.geeksforgeeks.org/symmetric-tree-tree-which-is-mirror-image-of-itself/
+// 재귀 자체를 짜는 것은 어렵지 않았지만, 다음 아이디어를 떠올리는 것이 어려웠다.
+/**
+ return checkSymmetric(left?.left, right?.right) // 왼쪽 자식의 왼쪽 자식과 오른쪽 자식의 오른쪽 자식 비교
+        && checkSymmetric(left?.right, right?.left) // 반대 비교
+ */
+// 0ms, 19.8MB
+class SymmetricTreeSolution {
+    func checkSymmetric(_ left: TreeNode?, _ right: TreeNode?) -> Bool {
+        // 끝에 도달하는 경우 판별한다
+        if left == nil && right == nil {
+            return true
+        }
+        
+        if left == nil || right == nil || left?.val != right?.val {
+            return false
+        }
+        
+        // 아직 아니라면 재귀호출한다
+        return checkSymmetric(left?.left, right?.right) // 왼쪽 자식의 왼쪽 자식과 오른쪽 자식의 오른쪽 자식 비교
+               && checkSymmetric(left?.right, right?.left) // 반대 비교
+    }
+    
+    func isSymmetric(_ root: TreeNode?) -> Bool {
+        guard let root = root else { return false }
+        return checkSymmetric(root.left, root.right)
+    }
+}
 //: [Next](@next)
