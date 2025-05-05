@@ -112,27 +112,27 @@ class BinaryTreePostorderTraversalSolution {
 // 레벨 별로 노드들을 묶어내어 반환한다
 
 // 처음 시도
-// 아이디어: 스택을 이용해 좌상에서 우하로 순회해볼 수 있겠다
+// 아이디어: 큐를 이용해 좌상에서 우하로 순회해볼 수 있겠다
 func levelOrderFirstAnswer(_ root: TreeNode?) -> [[Int]] {
     guard let root = root else { return [] }
     
     var result = [[Int]]()
-    var st = [TreeNode]()
-    st.append(root)
+    var q = [TreeNode]()
+    q.append(root)
     result.append([root.val])
     
-    while !st.isEmpty {
-        let cur = st.removeFirst() // FIFO
+    while !q.isEmpty {
+        let cur = q.removeFirst() // FIFO
         var levelNodes = [Int]()
         
         if let left = cur.left {
             levelNodes.append(left.val)
-            st.append(left)
+            q.append(left)
         }
         
         if let right = cur.right {
             levelNodes.append(right.val)
-            st.append(right)
+            q.append(right)
         }
         
         if !levelNodes.isEmpty { // 자식이 없는 경우 추가하지 않는다
@@ -166,22 +166,22 @@ func levelOrder(_ root: TreeNode?) -> [[Int]] {
     guard let root = root else { return [] }
     
     var result = [[Int]]()
-    var st = [(TreeNode, Int)]()
-    st.append((root, 1))
+    var q = [(TreeNode, Int)]()
+    q.append((root, 1))
     result.append([root.val])
     
-    while !st.isEmpty {
-        let (cur, level) = st.removeFirst() // FIFO
+    while !q.isEmpty {
+        let (cur, level) = q.removeFirst() // FIFO
         var levelNodes = [Int]()
         
         if let left = cur.left {
             levelNodes.append(left.val)
-            st.append((left, level + 1))
+            q.append((left, level + 1))
         }
         
         if let right = cur.right {
             levelNodes.append(right.val)
-            st.append((right, level + 1))
+            q.append((right, level + 1))
         }
         
         // add sub result
