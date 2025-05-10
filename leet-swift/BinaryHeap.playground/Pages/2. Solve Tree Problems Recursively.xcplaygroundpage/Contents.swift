@@ -2,6 +2,19 @@
 
 import Foundation
 
+public class TreeNode {
+    public var val: Int
+    public var left: TreeNode?
+    public var right: TreeNode?
+    public init() { self.val = 0; self.left = nil; self.right = nil; }
+    public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+    public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+        self.val = val
+        self.left = left
+        self.right = right
+    }
+}
+
 // MARK: - Maximum Depth of Binary Tree
 // 가장 깊이가 깊은 노드의 레벨을 구한다
 
@@ -35,7 +48,7 @@ func maxDepth(_ root: TreeNode?) -> Int {
 // 너무 가독성이 좋다. 이 챕터 주제 자체가 재귀적으로 풀어보기라서 여기 문제들은 재귀함수를 고려해보면 좋을 것 같다.
 // 위와 같이 큐를 이용한 BFS와 성능을 비교하면 어떻게 될까?
 // 0ms, 20.2MB -> 실행 시간과 점유 메모리는 우선 비슷하다. 어짜피 돌기는 다 돌아야 답을 낼 수 있기 때문에 여러 케이스에 대한 평균 성능은 비슷할 것.
-func maxDepth(_ root: TreeNode?) -> Int {
+func maxDepthExample(_ root: TreeNode?) -> Int {
     guard let root = root else { return 0 }
     
     let leftDepth = maxDepth(root.left)
