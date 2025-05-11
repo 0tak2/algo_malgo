@@ -208,6 +208,15 @@ func lowestCommonAncestor(_ root: TreeNode?, _ p: TreeNode?, _ q: TreeNode?) -> 
 // BFS로 레벨 순회를 하도록 되어있다
 // https://leetcode.com/explore/learn/card/data-structure-tree/133/conclusion/995/
 
+/**
+ serialize는 레벨 순회 하면서 순회 내용을 배열로 담고 스트링으로 변환하도록 구현했다.
+ nil 값을 순회 배열에는 넣고, 스택에는 넣으면 안되도록 처리해야하는데, 이 부분을 잊어서 무한루프 문제가 있었다.
+ 
+ deserialize는 레벨 순회를 하되, 그때 그때 인풋에서 value를 찾아 TreeNode를 적절하게 넣어주는 방식이다.
+ 이 발상 자체가 처음에 잘 떠오르지 않아 ChatGPT를 사용했다.
+ 또 string 인덱스를 다루는 방법을 까먹어서 문서를 참고했다.
+ */
+
 // 41ms, 20.4MB
 class Codec {
     func serialize(_ root: TreeNode?) -> String {
