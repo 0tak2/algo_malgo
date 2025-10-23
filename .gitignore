@@ -214,3 +214,4 @@ fabric.properties
 
 .DS_Store
 *.xcuserstate
+dingco-python/.venv
